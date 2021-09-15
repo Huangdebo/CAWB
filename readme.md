@@ -1,7 +1,7 @@
 ﻿#  余弦退火从启动学习率机制 
-【导语】主要介绍 ** 在pytorch 中实现了余弦退火从启动学习率机制，支持 warmup 和 resume 训练。并且支持自定义下降函数，实现多种重启动机制。
+【导语】主要介绍 ** 在pytorch 中实现了余弦退火重启动学习率机制，支持 warmup 和 resume 训练。并且支持自定义下降函数，实现多种重启动机制。
 
-代码： https://github.com/Huangdebo/Confluence
+代码： https://github.com/Huangdebo/CAWB
 
 ## 1. 多 step 重启动
 ![设定 cawb_steps 之后，便可实现多步长余弦退火重启动学习率机制](https://img-blog.csdnimg.cn/bd85817d24bb400b92c53fe14ead9c1e.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAd29uZGVyZnVsX2hkYg==,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center)
