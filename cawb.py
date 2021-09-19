@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 class CosineAnnealingWarmbootingLR:
     # cawb learning rate scheduler: given the warm booting steps, calculate the learning rate automatically   
 
-    def __init__(self, optimizer, epochs=0, eta_min=0.05, steps=[], step_scale=0.8, lf=None, batchs=0, warmup_epoch=0):
+    def __init__(self, optimizer, epochs=0, eta_min=0.05, steps=[], step_scale=0.8, lf=None, batchs=0, warmup_epoch=0, epoch_scale=1.0):
         self.warmup_iters = batchs * warmup_epoch
         self.optimizer = optimizer
         self.eta_min = eta_min
@@ -31,6 +31,7 @@ class CosineAnnealingWarmbootingLR:
         self.gap = 0
         self.last_epoch = 0     
         self.lf = lf
+        self.epoch_scale = epoch_scale
         
         # Initialize epochs and base learning rates
         for group in optimizer.param_groups:
@@ -49,6 +50,9 @@ class CosineAnnealingWarmbootingLR:
             if (iters <= self.steps[i+1]):
                 self.gap = self.steps[i+1] - self.steps[i]
                 iters = iters - self.steps[i]
+
+                if i != len(self.steps)-2:
+                    self.gap += self.epoch_scale
                 break
             scale *= self.step_scale
         
@@ -110,9 +114,9 @@ def train(opt):
     
     optimizer = optim.Adam(net.parameters(), lr=0.1)
     
-    lf = lambda x, y=opt.epochs: (((1 + math.cos(x * math.pi / y)) / 2) ** 1.0) * 0.9 + 0.1  
+    lf = lambda x, y=opt.epochs: (((1 + math.cos(x * math.pi / y)) / 2) ** 1.0) * 0.8 + 0.2  
     # lf = lambda x, y=opt.epochs: (1.0 - (x / y)) * 0.9 + 0.1 
-    scheduler = CosineAnnealingWarmbootingLR(optimizer, epochs=opt.epochs, steps=opt.cawb_steps, 
+    scheduler = CosineAnnealingWarmbootingLR(optimizer, epochs=opt.epochs, steps=opt.cawb_steps, step_scale=0.7,
                                              lf=lf, batchs=len(data), warmup_epoch=0)
     # last_epoch = 20
     # scheduler.last_epoch = last_epoch  # if resume from given model
