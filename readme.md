@@ -46,12 +46,14 @@ scheduler = CosineAnnealingWarmbootingLR(optimizer, epochs=opt.epochs, steps=opt
 ```
 ![cos 和 cawb 学习率](https://img-blog.csdnimg.cn/dbfa53959c5d4f368ffae7340c8d9050.jpg?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAd29uZGVyZnVsX2hkYg==,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center)
 #### 6.2 map:
-cos：
+（1）cos：
 ![mAP_0.5 = 0.294; mAP_0.5:0.95 = 0.161](https://img-blog.csdnimg.cn/5467799ce60947f9b52d6722372b3213.jpg?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAd29uZGVyZnVsX2hkYg==,size_16,color_FFFFFF,t_70,g_se,x_16)
+
 mAP_0.5 = 0.294; mAP_0.5:0.95 = 0.161
 
-CAWB ：
+（2）CAWB ：
 ![mAP_0.5 = 0.302; mAP_0.5:0.95 = 0.165](https://img-blog.csdnimg.cn/2bc252a5434d466b9f55604344123cd9.jpg?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAd29uZGVyZnVsX2hkYg==,size_16,color_FFFFFF,t_70,g_se,x_16)
+
 mAP_0.5 = 0.302; mAP_0.5:0.95 = 0.165
 
 # 7. 结论
