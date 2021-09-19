@@ -49,10 +49,12 @@ scheduler = CosineAnnealingWarmbootingLR(optimizer, epochs=opt.epochs, steps=opt
 
 #### 6.2.1 cos：
 ![mAP_0.5 = 0.294;  mAP_0.5:0.95 = 0.161](https://img-blog.csdnimg.cn/9633cce6adf744d097181b81ac4d1fd1.jpg?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAd29uZGVyZnVsX2hkYg==,size_16,color_FFFFFF,t_70,g_se,x_16#pic_center)
+
 mAP_0.5 = 0.294;  mAP_0.5:0.95 = 0.161
 
 #### 6.2.2 CAWB ：
 ![mAP_0.5 = 0.302; mAP_0.5:0.95 = 0.165](https://img-blog.csdnimg.cn/6fe463388c43475abe495de50da2ee1b.jpg?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAd29uZGVyZnVsX2hkYg==,size_16,color_FFFFFF,t_70,g_se,x_16#pic_center)
+
 mAP_0.5 = 0.302; mAP_0.5:0.95 = 0.165
 
 # 7. 结论
