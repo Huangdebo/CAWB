@@ -123,11 +123,12 @@ def train(opt):
         scheduler.step()
 
 
-    plt.plot(x, y)
+    plt.plot(x, y,'.-')
     plt.xlabel("epoch")
-    plt.ylabel("lr")
+    plt.ylabel("LR")
     plt.title("learning rate's curve changes as epoch goes on!")
-    plt.savefig("LR.png")
+    plt.tight_layout()
+    plt.savefig("LR.png", dpi=200)
 
 
     return 0
