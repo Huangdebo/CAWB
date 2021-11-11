@@ -93,7 +93,7 @@ def plot_lr_scheduler(optimizer, scheduler, epochs=300, save_dir='./LR.png',batc
         plt.ylim(0)
         plt.tight_layout()
         plt.savefig(save_dir, dpi=200)
-    elif  pic_type=="batch":
+    elif  pic_type=="epoch":
         for _ in range(scheduler.last_epoch):
             y.append(None)
         for _ in range(scheduler.last_epoch, epochs):
@@ -134,11 +134,11 @@ def train(opt):
     scheduler = CosineAnnealingWarmbootingLR(optimizer, epochs=opt.epochs, steps=opt.cawb_steps, step_scale=0.7,
                                              lf=lf, batchs=len(data), warmup_epoch=10)
     
-    #last_epoch = 5
-    #scheduler.last_epoch = last_epoch  # if resume from given model
-    #scheduler.iters_batch=len(data)*last_epoch
+    last_epoch = 5
+    scheduler.last_epoch = last_epoch  # if resume from given model
+    scheduler.iters_batch=len(data)*last_epoch
     
-    plot_lr_scheduler(optimizer, scheduler, opt.epochs,batchs=len(data),pic_type="batch")  # pic_type="batch"  以batch为横轴  pic_type="iter"  以iteration为横轴
+    plot_lr_scheduler(optimizer, scheduler, opt.epochs,batchs=len(data),pic_type="epoch")  # pic_type="epoch"  以epoch为横轴  pic_type="iter"  以iteration为横轴
     
 
     for i in range(opt.epochs):
