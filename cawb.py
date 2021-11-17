@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Sep  6 19:10:49 2021
-
-@author: hdb
-"""
-
 import torch.optim as optim
 import torch
 import torch.nn as nn
@@ -78,23 +71,44 @@ class CosineAnnealingWarmbootingLR:
             return None
     
     
-def plot_lr_scheduler(optimizer, scheduler, epochs=300, save_dir='./LR.png'):
+def plot_lr_scheduler(optimizer, scheduler, epochs=300, save_dir='./LR.png',batchs=100,pic_type="iter"):
     # Plot LR simulating training for full epochs
     optimizer, scheduler = copy(optimizer), copy(scheduler)  # do not modify originals
     y = []
-    for _ in range(scheduler.last_epoch):
-        y.append(None)
-    for _ in range(scheduler.last_epoch, epochs):
-        y.append(scheduler.step())
-        
-    plt.plot(y, '.-', label='LR')
-    plt.xlabel('epoch')
-    plt.ylabel('LR')
-    plt.grid()
-    plt.xlim(0, epochs)
-    plt.ylim(0)
-    plt.tight_layout()
-    plt.savefig(save_dir, dpi=200)
+    if pic_type=="iter":
+        for _ in range(scheduler.last_epoch+1):
+            for i in range(batchs):
+                y.append(None)
+        for _ in range(scheduler.last_epoch+1, epochs):
+            for _ in range(batchs):
+                scheduler.step_batch()
+                y.append(optimizer.param_groups[0]['lr'])
+            scheduler.step()
+
+        plt.plot(y, label='LR')
+        plt.xlabel('iteration')
+        plt.ylabel('LR')
+        plt.grid()
+        plt.xlim(0, epochs*batchs)
+        plt.ylim(0)
+        plt.tight_layout()
+        plt.savefig(save_dir, dpi=200)
+    elif  pic_type=="epoch":
+        for _ in range(scheduler.last_epoch+1):
+            y.append(None)
+        for _ in range(scheduler.last_epoch+1, epochs):
+            for _ in range(batchs):
+                scheduler.step_batch()
+            y.append(optimizer.param_groups[0]['lr'])
+            scheduler.step()
+            
+        plt.plot(y, '.-', label='LR')
+        plt.xlabel('epoch')
+        plt.ylabel('LR')
+        plt.grid()
+        plt.xlim(0, epochs)
+        plt.ylim(0)
+        plt.savefig(save_dir, dpi=200)
 
     
 class model(nn.Module):
@@ -117,13 +131,37 @@ def train(opt):
     lf = lambda x, y=opt.epochs: (((1 + math.cos(x * math.pi / y)) / 2) ** 1.0) * 0.8 + 0.2  
     # lf = lambda x, y=opt.epochs: (1.0 - (x / y)) * 0.9 + 0.1 
     scheduler = CosineAnnealingWarmbootingLR(optimizer, epochs=opt.epochs, steps=opt.cawb_steps, step_scale=0.7,
-                                             lf=lf, batchs=len(data), warmup_epoch=0)
-    # last_epoch = 20
-    # scheduler.last_epoch = last_epoch  # if resume from given model
-    # plot_lr_scheduler(optimizer, scheduler, opt.epochs)  # 目前不能画出 warmup 的曲线
+                                             lf=lf, batchs=len(data), warmup_epoch=10)
+
+    """
+    #if resume
+
+    last_epoch = 5
+    scheduler.last_epoch = last_epoch
+    scheduler.iters_batch=len(data)*last_epoch
+    scheduler.step()
+    """
+    
+    plot_lr_scheduler(optimizer, scheduler, opt.epochs,batchs=len(data),pic_type="iter")  # pic_type="epoch"  以epoch为横轴  pic_type="iter"  以iteration为横轴
     
 
     for i in range(opt.epochs):
+
+        for b in range(len(data)):
+            lr = scheduler.step_batch()  # defore the backward
+            
+            # training
+            # loss
+            # backward
+
+            
+        scheduler.step()
+
+
+    """
+    # if resume
+
+    for i in range(last_epoch+1,opt.epochs):
         
         for b in range(len(data)):
             lr = scheduler.step_batch()  # defore the backward
@@ -135,6 +173,8 @@ def train(opt):
             
         scheduler.step()
 
+
+    """
 
     return 0
 
@@ -149,4 +189,3 @@ if __name__ == '__main__':
     
     
     train(opt)
-
